@@ -5,4 +5,5 @@ node_modules
 test-results
 playwright-report
 .next
+/tsconfig.tsbuildinfo
 /public/Image-1.jpg
