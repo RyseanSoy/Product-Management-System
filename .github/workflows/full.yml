@@ -1,0 +1,62 @@
+
+name: Playwright Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify Playwright installation
+        run: |
+          npm ls @playwright/test
+          npx --no-install playwright --version
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: List available tests
+        run: npx playwright test --list
+
+      - name: Start development server
+        run: |
+          npm run dev -- --host 127.0.0.1 > /tmp/dev-server.log 2>&1 &
+          echo $! > /tmp/dev-server.pid
+
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          BASE_URL: http://127.0.0.1:3000
+      - name: Check generated report
+        if: ${{ !cancelled() }}
+        run: |
+          ls -lah playwright-report/ || true
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+          if-no-files-found: error
+
+      
