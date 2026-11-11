@@ -9,6 +9,7 @@ export default function RegisterPage() {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [name, setName] = useState("")
     const [error, setError] = useState("")
     async function register() {
@@ -18,7 +19,7 @@ export default function RegisterPage() {
             const response = await fetch("/api/registerUser", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, password }),
+                body: JSON.stringify({ name, email, password, confirmPassword }),
             })
 
             if (!response.ok) {
@@ -58,6 +59,16 @@ export default function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
             />
             <br />
+            <input
+                className="authInput"
+                type="password"
+                minLength={8}
+                placeholder="ConfirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <br />
+
             <button
                 className="authButton"
                 type="submit"

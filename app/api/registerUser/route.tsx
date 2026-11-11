@@ -5,11 +5,17 @@ import path from "path";
 
 export async function POST(request: NextRequest) {
 
-    const { name, email, password } = await request.json();
+    const { name, email, password, confirmPassword } = await request.json();
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
         return NextResponse.json(
             { error: "All fields are required" },
+            { status: 400 }
+        );
+    }
+    if (password !== confirmPassword) {
+        return NextResponse.json(
+            { error: "Passwords do not match" },
             { status: 400 }
         );
     }
@@ -20,8 +26,10 @@ export async function POST(request: NextRequest) {
             { status: 400 }
         );
     }
+    // Get default profile picture
     const buffer = await readFile(path.join(process.cwd(), "public", "defaultProfile.jpg"));
     const defaultAvatar = new File([buffer], "defaultProfile.jpg", { type: "image/jpeg" });
+    // Normalize email
     const normalizedEmail = email.trim().toLowerCase();
     const pb = new PocketBase(process.env.POCKETBASE_URL);
     try {
@@ -31,7 +39,7 @@ export async function POST(request: NextRequest) {
             password,
             avatar: defaultAvatar,
             role: "User",
-            passwordConfirm: password,
+            passwordConfirm: confirmPassword,
         });
 
         return NextResponse.json(
