@@ -1,73 +1,104 @@
 # Product Management System
 
-## Description
-This project is a web application for managing products, developed using Next.js. It features a user-friendly interface for product management, including adding, editing, and deleting products.
+A Next.js product management application with authentication, product CRUD operations, profile avatars, charts, Redis-powered homepage content, and PocketBase storage.
 
 ## Features
-- Product Management: Perform CRUD operations (Create, Read, Update, Delete) on products.
-- User Interface: A modern and responsive web interface for product management.
-- Media Integration: Seamless integration with Cloudinary for image management.
 
-## Setup
+- User registration and login
+- Create, view, edit, and delete products
+- Admin dashboard with product charts
+- User profile and avatar support
+- Responsive interface
+- Cloudinary image delivery with Next.js `Image` optimization
+- Playwright end-to-end tests
 
-Follow these steps to set up and run the project locally.
+## Technology
 
-### Prerequisites
-- **Node.js**: Version 18.0.0 or higher.
-- **npm**: Version 9.0.0 or higher (usually comes with Node.js).
+- Next.js 16 and React 19
+- TypeScript
+- PocketBase for authentication and product data
+- Redis Cloud for homepage content
+- Cloudinary for homepage image delivery
+- Playwright for end-to-end testing
 
-### Installation
+## Requirements
 
-1.  **Clone the repository** (if you haven't already):
-    ```bash
-    git clone <repository-url>
-    cd Product-Management-System
-    ```
+- Node.js 22 or later
+- npm
+- PocketBase
+- Redis Cloud account, or another Redis-compatible server
 
-2.  **Install dependencies**:
-    Navigate to the project directory in your terminal and run:
-    ```bash
-    npm install
-    ```
+## Installation
 
-### Configuration
-
-This project uses environment variables for configuration. Ensure you have a `.env.local` file in the root directory with the following variables:
+Clone the repository and install the dependencies:
 
 ```bash
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
-NEXT_PUBLIC_CLOUDINARY_API_KEY=your_api_key
-NEXT_PUBLIC_CLOUDINARY_API_SECRET=your_api_secret
+git clone <repository-url>
+cd Product-Management-System
+npm ci
 ```
 
-*Replace `your_cloud_name`, `your_api_key`, and `your_api_secret` with your actual Cloudinary credentials.*
+Create `.env.local` from `.env.example` and provide the PocketBase and Redis values.
 
-### Running the Application
+Do not commit `.env.local` because it contains credentials.
 
-Start the development server:
+## Start PocketBase
+
+From the project directory, start PocketBase on its default port:
+
+```powershell
+.\pocketbase.exe serve
+```
+
+The application expects PocketBase at `http://127.0.0.1:8090` by default. The included migrations create the required collections when PocketBase starts.
+
+## Run the application
 
 ```bash
 npm run dev
 ```
 
-Open your browser and navigate to [http://localhost:3000](http://localhost:3000) to view the application.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Build and Test
+## Testing
 
-To create a production build of the application:
+Install the Playwright browsers once:
+
+```bash
+npx playwright install
+```
+
+Run the end-to-end tests:
+
+```bash
+npm run test:e2e
+```
+
+## Production build
 
 ```bash
 npm run build
-```
-
-To run the build in production mode:
-
-```bash
 npm run start
 ```
 
-## Tech Stack
-- **Framework**: Next.js (React)
-- **Styling**: CSS
-- **Image Management**: Cloudinary
-- **Database: SQLite Server(pocketbase)
+## Screenshots
+
+### Homepage
+
+![Homepage](public/HomePage.png)
+
+### Product management
+
+![Products list](public/ProductsPage.png)
+
+![Add product](public/AddPage.png)
+
+![Edit product](public/EditProductPage.png)
+
+### Admin dashboard
+
+![Admin dashboard](public/AdminPage.png)
+
+## Environment variables
+
+See `.env.example` for the required PocketBase and Redis variables. The homepage Cloudinary image is configured in `app/page.tsx`; no Cloudinary API secret is required to display it.
