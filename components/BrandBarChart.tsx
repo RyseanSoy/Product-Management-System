@@ -1,16 +1,27 @@
 "use client";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+
+// Chart.js draws the chart in the browser.
+import { Bar } from 'react-chartjs-2';
+import {
+    Chart as ChartJS, CategoryScale, LinearScale,
+    BarElement, Tooltip, Legend,
+} from "chart.js";
+
+// Register the Chart.js features used by this bar chart.
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 type Props = { data: { brand: string; count: number }[] };
 
 export default function BrandBarChart({ data }: Props) {
-    return (
-        <BarChart width={500} height={300} data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="brand" />
-            <YAxis allowDecimals={false} />
-            <Tooltip />
-            <Bar dataKey="count" fill="#3b82f6" />
-        </BarChart>
-    );
+    // Convert the shared brand data into Chart.js format.
+    const chartData = {
+        labels: data.map((d) => d.brand),
+        datasets: [{
+            label: "Laptops in stock",
+            data: data.map((d) => d.count),
+            backgroundColor: "#3b82f6",
+        }],
+    };
+    // Render the bar chart with the prepared labels and values.
+    return <Bar data={chartData} />;
 }
