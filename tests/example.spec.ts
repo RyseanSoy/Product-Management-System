@@ -34,7 +34,7 @@ test.describe("Authentication pages", () => {
     await page.goto("/register");
     await page.getByPlaceholder("Name").fill("Test User");
     await page.getByPlaceholder("Email").fill("test@example.com");
-    await page.getByPlaceholder("Password").fill("password123");
+    await page.getByPlaceholder("Password", { exact: true }).fill("password123");
     await page.getByRole("button", { name: "Register" }).click();
     await expect(page).toHaveURL(/\/login$/);
   });
@@ -46,7 +46,7 @@ test.describe("Authentication pages", () => {
     await page.goto("/register");
     await page.getByPlaceholder("Name").fill("Test User");
     await page.getByPlaceholder("Email").fill("test@example.com");
-    await page.getByPlaceholder("Password").fill("short");
+    await page.getByPlaceholder("Password", { exact: true }).fill("short");
     await page.getByRole("button", { name: "Register" }).click();
     await expect(page.getByText("Password must be at least 8 characters")).toBeVisible();
   });

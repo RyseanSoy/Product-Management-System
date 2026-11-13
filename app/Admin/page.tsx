@@ -18,12 +18,12 @@ type BrandData = {
 
 export default function AdminDashboard() {
     const router = useRouter();
-  // Chart data is grouped by product brand.
+    // Chart data is grouped by product brand.
     const [data, setData] = useState<BrandData[]>([]);
 
     useEffect(() => {
         async function loadDashboard() {
-      // Only logged-in Admin users can view the dashboard.
+            // Only logged-in Admin users can view the dashboard.
             if (!pb.authStore.isValid || pb.authStore.record?.role !== "Admin") {
                 router.push("/login");
                 return;
@@ -33,12 +33,12 @@ export default function AdminDashboard() {
             if (!response.ok) return;
 
             const products: Product[] = await response.json();
-      // Add the stock quantity for products with the same brand.
+            // Add the stock quantity for products with the same brand.
             const totals = products.reduce<Record<string, number>>((result, product) => {
                 result[product.brand] = (result[product.brand] ?? 0) + Number(product.quantity_Stock || 0);
                 return result;
             }, {});
-
+            // set data for bar chart and line chart.
             setData(Object.entries(totals).map(([brand, count]) => ({ brand, count })));
         }
 

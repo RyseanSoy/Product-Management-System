@@ -23,6 +23,19 @@ function createRedisClient() {
 }
 
 export async function getHomepageContent() {
+  const redisPort = Number(process.env.REDIS_PORT);
+
+  // Redis is optional in CI and local test runs. Use homepage defaults when
+  // the connection settings are not available instead of creating an invalid client.
+  if (
+    !process.env.REDIS_HOST ||
+    !Number.isInteger(redisPort) ||
+    redisPort < 0 ||
+    redisPort > 65535
+  ) {
+    return homepageDefaults;
+  }
+
   const client = createRedisClient();
   client.on("error", (error) => console.error("Redis client error", error));
 
